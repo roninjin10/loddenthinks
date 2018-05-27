@@ -1,6 +1,8 @@
 pragma solidity ^0.4.23;
 
-contract LoddenThinks {
+import "./zeppelin/ownership/Ownable.sol";
+
+contract LoddenThinks is Ownable {
     struct Game {
         uint stakes;
         address[] players;

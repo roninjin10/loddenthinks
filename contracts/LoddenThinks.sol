@@ -6,11 +6,12 @@ contract LoddenThinks is Ownable {
     struct Game {
         uint stakes;
         address[] players;
-        uint8 lodden;
         string answer;
-        uint8[] bids;
         bool[] didPay;
         uint blockNumber;
+        uint8[] bids;
+        uint8 lodden;
+        uint8 bidder;
     }
 
     event newGame(
@@ -101,6 +102,11 @@ contract LoddenThinks is Ownable {
 
     modifier onlyLodden(_gameId) {
         require(games[_gameId].lodden == msg.sender);
+        _;
+    }
+
+    modifier onlyBidder(_gameId) {
+        require(games[_gameId].bidder == msg.sender);
         _;
     }
 

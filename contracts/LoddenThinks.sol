@@ -28,12 +28,7 @@ contract LoddenThinks is Ownable {
 
     Game[] public games;
 
-    function cancelGame(_gameId) public onlyPlayers(_gameId) {
-        Game memory _game = games[_gameId];
-        
-        require(block.number > _game.blockNumber + 60);
-        require(!_game.didPay[0] || !_game.didPay[1] || !_game.didPay[2]);
-
+    function cancelGame(Game _game) private {
         for (uint i; i < 3; i++) {
             if (_game.didPay[i]) {
                 _game.players[i].transfer(_game.stakes);
@@ -47,6 +42,25 @@ contract LoddenThinks is Ownable {
             false,
             _game.players
         )
+    }
+
+    function cancelGamePlayer(uint _gameId) public onlyPlayers(_gameId) {
+        Game memory _game = games[_gameId];
+
+        if (block.number < _game.blockNumber + 300) {
+            require(block.number > _game.blockNumber + 60);
+            require(!_game.didPay[0] || !_game.didPay[1] || !_game.didPay[2]);
+        }
+
+        cancelGame(_game);
+    }
+
+    function cancelGameAdmin(uint _gameId) public onlyOwner {
+        Game memory _game = games[_gameId];
+
+        require(block.number > _game.blockNumber + 300);
+
+        cancelGame(_game);
     }
 
     function createGame(uint _stakes, address _player1, address _player2, address _player3) public payable {

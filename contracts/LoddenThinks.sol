@@ -28,6 +28,18 @@ contract LoddenThinks is Ownable {
 
     Game[] public games;
 
+    function buyin(uint _gameId) public payable onlyPlayers(_gameId) {
+        Game memory _game = games[_gameId];
+
+        require(msg.value == _game.stakes);
+        
+        for (uint i; i < 3; i++) {
+            if (msg.sender == players[i]) {
+                didPay[i] = true;
+            }
+        }
+    }
+
     function cancelGame(Game _game) private {
         for (uint i; i < 3; i++) {
             if (_game.didPay[i]) {
@@ -85,7 +97,9 @@ contract LoddenThinks is Ownable {
     }
 
     modifier onlyPlayers(_gameId) {
-        require(games[_gameId].players[0] === msg.sender || games[_gameId].players[1] === msg.sender || games[_gameId].players[2] === msg.sender);
+        Game memory _game = games[_gameId];
+        require(_game.players[0] === msg.sender || _game.players[1] === msg.sender || _game.players[2] === msg.sender);
+        _;
     }
 }
 

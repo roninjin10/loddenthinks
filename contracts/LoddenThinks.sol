@@ -27,7 +27,10 @@ contract LoddenThinks is Ownable {
 
     Game[] public games;
 
+    function submitAnswer(string _answer) public onlyLodden(_gameId) {
+        games[_gameId].answer = _answer;
 
+    }
 
     function buyin(uint _gameId) public payable onlyPlayers(_gameId) {
         Game memory _game = games[_gameId];
@@ -94,6 +97,11 @@ contract LoddenThinks is Ownable {
           msg.value,
           msg.sender
         );
+    }
+
+    modifier onlyLodden(_gameId) {
+        require(games[_gameId].lodden == msg.sender);
+        _;
     }
 
     modifier onlyPlayers(_gameId) {

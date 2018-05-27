@@ -101,5 +101,12 @@ contract LoddenThinks is Ownable {
         require(_game.players[0] === msg.sender || _game.players[1] === msg.sender || _game.players[2] === msg.sender);
         _;
     }
+
+    modifier gameStarted(_gameId) {
+        Game memory _game = games[_gameId];
+        for (i = 0; i < 3; i++) {
+            require(_game.didPay[i]);
+        }
+    }
 }
 

@@ -23,10 +23,11 @@ contract LoddenThinks is Ownable {
         uint stakes,
         address[] players,
         bool didStart players,
-        address[] winners
     )
 
     Game[] public games;
+
+
 
     function buyin(uint _gameId) public payable onlyPlayers(_gameId) {
         Game memory _game = games[_gameId];
@@ -52,7 +53,6 @@ contract LoddenThinks is Ownable {
             _game.stakes,
             _game.players,
             false,
-            _game.players
         )
     }
 
